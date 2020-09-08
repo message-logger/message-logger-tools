@@ -3,28 +3,29 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <modules>
-      <module>integration-tests-tf-processor</module>
-      <module>integration-tests-rest-api-processor</module>
-   </modules>
 
    <parent>
       <groupId>io.github.message-logger</groupId>
-      <artifactId>message-logger-tools-sumologic</artifactId>
+      <artifactId>integration-tests</artifactId>
       <version>0.1.0-SNAPSHOT</version>
    </parent>
 
-   <packaging>pom</packaging>
+   <artifactId>integration-tests-tf-processor</artifactId>
 
-   <artifactId>integration-tests</artifactId>
-
-   <name>Message Logger Tools Integration Tests Sumo Logic</name>
+   <name>Message Logger Tools Integration Tests Sumo Logic TF</name>
 
    <dependencies>
       <dependency>
          <groupId>io.github.message-logger</groupId>
+         <artifactId>message-logger-tools-api</artifactId>
+         <version>${project.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>io.github.message-logger</groupId>
          <artifactId>message-logger-tools-sumologic-tf-processor</artifactId>
          <version>${project.version}</version>
+         <scope>provided</scope>
       </dependency>
    </dependencies>
 </project>
