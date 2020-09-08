@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>io.github.message-logger</groupId>
+      <artifactId>message-logger-tools</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+   </parent>
+
+   <artifactId>message-logger-tools-slf4j</artifactId>
+
+   <name>Message Logger Tools SLF4J</name>
+
+   <properties>
+      <slf4j-api-version>1.8.0-beta4</slf4j-api-version>
+      <system-rules-version>1.19.0</system-rules-version>
+   </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.hamcrest</groupId>
+         <artifactId>hamcrest</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>io.github.message-logger</groupId>
+         <artifactId>message-logger-tools-api</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <version>${slf4j-api-version}</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.github.stefanbirkner</groupId>
+         <artifactId>system-rules</artifactId>
+         <version>${system-rules-version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>io.github.message-logger</groupId>
+         <artifactId>message-logger-tools-sumologic-tf-processor</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+   </dependencies>
+</project>

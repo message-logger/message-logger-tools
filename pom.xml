@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>io.github.message-logger</groupId>
+   <artifactId>message-logger-tools</artifactId>
+   <version>0.1.0-SNAPSHOT</version>
+
+   <packaging>pom</packaging>
+
+   <modules>
+      <module>message-logger-tools-annotations</module>
+      <module>message-logger-tools-validator-processor</module>
+      <module>message-logger-tools-api</module>
+      <module>message-logger-tools-slf4j</module>
+      <module>message-logger-tools-sumologic</module>
+   </modules>
+
+   <name>Message Logger Tools</name>
+
+   <url>https://github.com/message-logger/message-logger-tools</url>
+
+   <properties>
+      <java.version>1.8</java.version>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   </properties>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
+         </dependency>
+
+         <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+
+   <build>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <configuration>
+                  <source>${java.version}</source>
+                  <target>${java.version}</target>
+               </configuration>
+            </plugin>
+         </plugins>
+      </pluginManagement>
+   </build>
+</project>
