@@ -16,12 +16,11 @@ import java.util.Set;
 
 import org.message.logger.tools.annotations.BusinessException;
 import org.message.logger.tools.annotations.Message;
+import org.message.logger.tools.annotations.utils.MessageUtils;
 
 import static java.lang.String.format;
 
 public class MessageAnnotationProcessor extends AbstractProcessor {
-
-   private static final String PLACEHOLDER = "\\{}";
 
    @Override
    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
@@ -34,10 +33,7 @@ public class MessageAnnotationProcessor extends AbstractProcessor {
             ExecutableType executableType = (ExecutableType) annotatedElement.asType();
             List<? extends TypeMirror> parameters = executableType.getParameterTypes();
 
-            String message = annotation.value();
-            String[] splitByPlaceholder = message.concat(" ").split(PLACEHOLDER);
-
-            int placeholderCount = splitByPlaceholder.length - 1;
+            int placeholderCount = MessageUtils.countPlaceholders(annotation);
             int parameterCount = parameters.size();
 
             if (parameterCount > 0) {

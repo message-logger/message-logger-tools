@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.message.logger.tools.annotations.sumologic.SumoFolder;
+import org.message.logger.tools.annotations.sumologic.utils.SumoUtils;
 
 import static java.lang.String.format;
 
@@ -34,9 +35,9 @@ public class SumoLogicFolder extends AbstractProcessor {
             String sumologicPersonalFolderTemplate = Utils.getContentAsString("sumologic_personal_folder.tf");
 
             for (Element annotatedElement : env.getElementsAnnotatedWith(typeElement)) {
-               SumoFolder annotation = annotatedElement.getAnnotation(SumoFolder.class);
+               SumoFolder folder = SumoUtils.resolveSumoFolder(annotatedElement);
 
-               String folderName = Utils.folderName(annotation.value());
+               String folderName = Utils.folderName(folder.value());
 
                String sumologicPersonalFolder = sumologicPersonalFolderTemplate.replaceAll("\\$\\{name}", folderName);
                writer.write(sumologicPersonalFolder);
@@ -44,20 +45,20 @@ public class SumoLogicFolder extends AbstractProcessor {
             }
 
             for (Element annotatedElement : env.getElementsAnnotatedWith(typeElement)) {
-               SumoFolder annotation = annotatedElement.getAnnotation(SumoFolder.class);
+               SumoFolder folder = SumoUtils.resolveSumoFolder(annotatedElement);
 
-               String folderName = Utils.folderName(annotation.value());
+               String folderName = Utils.folderName(folder.value());
 
                String sumologicFolder = sumologicFolderTemplate.replaceAll("\\$\\{snakeCaseName}", folderName);
-               sumologicFolder = sumologicFolder.replaceAll("\\$\\{name}", annotation.value());
-               sumologicFolder = sumologicFolder.replaceAll("\\$\\{description}", format("Folder for %s", annotation.value()));
+               sumologicFolder = sumologicFolder.replaceAll("\\$\\{name}", folder.value());
+               sumologicFolder = sumologicFolder.replaceAll("\\$\\{description}", format("Folder for %s", folder.value()));
                sumologicFolder = sumologicFolder.replaceAll("\\$\\{parentId}", format("\\$\\{data.sumologic_personal_folder.%s.id}", folderName));
 
                writer.write(sumologicFolder);
                writer.write("\n");
             }
-         } catch (IOException e) {
-            messager.printMessage(Diagnostic.Kind.ERROR, format("Exception: %s", Utils.getStackTrace(e)));
+         } catch (Throwable t) {
+            messager.printMessage(Diagnostic.Kind.ERROR, format("Exception: %s", Utils.getStackTrace(t)));
          }
       }
 
