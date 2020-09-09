@@ -1,14 +1,14 @@
 package org.message.logger.tools.api.nop;
 
-import org.message.logger.tools.api.BasicLogger;
+import org.message.logger.tools.api.ExtendedBasicLogger;
 import org.message.logger.tools.api.provider.LoggerProvider;
 
 public class NOPLoggerProvider implements LoggerProvider {
 
-   private static BasicLogger NOP_BASIC_LOGGER = new NOPBasicLogger();
+   private static ExtendedBasicLogger NOP_EXTENDED_BASIC_LOGGER = new NOPExtendedBasicLogger();
 
    @Override
-   public BasicLogger getLogger(String name) {
-      return NOP_BASIC_LOGGER;
+   public ExtendedBasicLogger getLogger(String name) {
+      return NOP_EXTENDED_BASIC_LOGGER;
    }
 }

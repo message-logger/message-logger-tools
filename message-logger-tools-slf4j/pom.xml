@@ -49,11 +49,5 @@
          <version>${system-rules-version}</version>
          <scope>test</scope>
       </dependency>
-
-      <dependency>
-         <groupId>io.github.message-logger</groupId>
-         <artifactId>message-logger-tools-sumologic-tf-processor</artifactId>
-         <version>${project.version}</version>
-      </dependency>
    </dependencies>
 </project>

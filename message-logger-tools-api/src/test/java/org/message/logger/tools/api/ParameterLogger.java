@@ -2,7 +2,9 @@ package org.message.logger.tools.api;
 
 import org.message.logger.tools.annotations.BusinessException;
 import org.message.logger.tools.annotations.Message;
+import org.message.logger.tools.annotations.Metadata;
 import org.message.logger.tools.api.exceptions.ResourceNotFound;
+import org.message.logger.tools.api.exceptions.RuntimeBusinessException;
 
 public interface ParameterLogger extends MessageLogger {
 
@@ -28,17 +30,25 @@ public interface ParameterLogger extends MessageLogger {
    void messageWithOneParameterAndThrowable(String parameter1, Throwable t);
 
    @Message("Message with custom exception should be compiled - Exception auto discovery")
-   void messageWithOnlyBusinessException(org.message.logger.tools.api.exceptions.BusinessException e);
+   void messageWithOnlyBusinessException(RuntimeBusinessException e);
 
    @Message("Message with custom exception should be compiled - Exception no following name convention")
    @BusinessException
    void messageWithOnlyBusinessException(ResourceNotFound e);
 
    @Message("Message with custom exception should be compiled - Exception auto discovery -> Parameter1: {}")
-   void messageWithOneParameterAndBusinessException(String parameter1,
-                                                    org.message.logger.tools.api.exceptions.BusinessException e);
+   void messageWithOneParameterAndBusinessException(String parameter1, RuntimeBusinessException e);
 
    @Message("Message with custom exception should be compiled - Exception no following name convention -> Parameter1: {}")
    @BusinessException
    void messageWithOneParameterAndBusinessException(String parameter1, ResourceNotFound e);
+
+   @Message("Message without parameters and single metadata should be compiled")
+   @Metadata(key = "MetadataKey", value = "MetadataValue")
+   void messageWithoutParameterAndSingleMetadataShouldCompile();
+
+   @Message("Message without parameters and multiples metadata should be compiled")
+   @Metadata(key = "MetadataKey1", value = "MetadataValue")
+   @Metadata(key = "MetadataKey2", value = "MetadataValue")
+   void messageWithoutParameterAndMultipleMetadataShouldCompile();
 }

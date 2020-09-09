@@ -4,18 +4,24 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.message.logger.tools.annotations.Message;
+import org.message.logger.tools.annotations.Metadata;
+import org.message.logger.tools.annotations.containers.MetadataContainer;
 import org.message.logger.tools.api.BasicLogger;
+import org.message.logger.tools.api.ExtendedBasicLogger;
 import org.message.logger.tools.api.exceptions.DelegationMethodNotFound;
 
 import static java.lang.String.format;
 
 public class MessageLoggerInvocationHandler implements InvocationHandler {
 
-   private BasicLogger logger;
+   private ExtendedBasicLogger logger;
 
-   public MessageLoggerInvocationHandler(BasicLogger logger) {
+   public MessageLoggerInvocationHandler(ExtendedBasicLogger logger) {
       this.logger = logger;
    }
 
@@ -38,8 +44,20 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
          Message message = method.getAnnotation(Message.class);
          Message.Level level = message.level();
 
+         MetadataContainer metadataContainer = method.getAnnotation(MetadataContainer.class);
+
+         Map<String, String> metadata = Collections.emptyMap();
+
+         if (metadataContainer != null) {
+            metadata = new HashMap<>();
+            Metadata[] metadataAnnotations = metadataContainer.value();
+
+            for (Metadata metadataAnnotation : metadataAnnotations) {
+               metadata.put(metadataAnnotation.key(), metadataAnnotation.value());
+            }
+         }
          if (args == null || args.length == 0) {
-            BasicLoggerWrapper.of(logger).logMessage(level, message.value());
+            ExtendedBasicLoggerWrapper.of(logger).logMessage(level, message.value(), metadata);
 
             successfulInvocation = true;
          } else {
@@ -49,11 +67,11 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
             boolean isException = Throwable.class.isAssignableFrom(lastParameter.getClass());
 
             if (moreThanOne) {
-               BasicLoggerWrapper.of(logger).logMessageAndParameters(level, message.value(), args);
+               ExtendedBasicLoggerWrapper.of(logger).logMessageAndParameters(level, message.value(), metadata, args);
 
                successfulInvocation = true;
             } else if (isException) {
-               BasicLoggerWrapper.of(logger).logMessageAndException(level, message.value(), (Throwable) args[0]);
+               ExtendedBasicLoggerWrapper.of(logger).logMessageAndException(level, message.value(), metadata, (Throwable) args[0]);
 
                successfulInvocation = true;
             }
