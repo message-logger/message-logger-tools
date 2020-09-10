@@ -44,10 +44,13 @@ public class SumoLogicContent extends AbstractProcessor {
 
                   String methodName = annotatedElement.getSimpleName().toString();
 
+                  String sumoQuery = SumoUtils.resolveQuery((ExecutableElement) annotatedElement);
+                  sumoQuery = sumoQuery.replaceAll("\"", "\\\\\"");
+
                   String sumologicContent = sumologicContentTemplate.replaceAll("\\$\\{parentId}", format("\\$\\{sumologic_folder.%s.id}", folderName));
                   sumologicContent = sumologicContent.replaceAll("\\$\\{name}", methodName);
                   sumologicContent = sumologicContent.replaceAll("\\$\\{description}", format("Query for %s", methodName));
-                  sumologicContent = sumologicContent.replaceAll("\\$\\{queryText}", SumoUtils.resolveQuery((ExecutableElement) annotatedElement));
+                  sumologicContent = sumologicContent.replaceAll("\\$\\{queryText}", sumoQuery);
 
                   writer.write(sumologicContent);
                   writer.write("\n");

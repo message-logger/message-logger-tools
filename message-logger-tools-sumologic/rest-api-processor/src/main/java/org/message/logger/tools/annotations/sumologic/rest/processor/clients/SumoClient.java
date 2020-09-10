@@ -1,8 +1,11 @@
 package org.message.logger.tools.annotations.sumologic.rest.processor.clients;
 
 import feign.Headers;
+import feign.Param;
 import feign.RequestLine;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.CreateContent;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.CreateFolder;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.FolderResponse;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.PersonalFolder;
 
 public interface SumoClient {
@@ -12,5 +15,10 @@ public interface SumoClient {
 
    @RequestLine("POST /content/folders")
    @Headers("Content-Type: application/json")
-   void createFolder(CreateFolder folder);
+   FolderResponse createFolder(CreateFolder folder);
+
+   @RequestLine("POST /content/folders/{folderId}/import")
+   @Headers("Content-Type: application/json")
+   void createContent(@Param("folderId") String folderId, CreateContent content);
+
 }

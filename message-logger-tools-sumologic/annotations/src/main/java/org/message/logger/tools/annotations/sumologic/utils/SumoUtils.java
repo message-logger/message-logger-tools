@@ -44,13 +44,13 @@ public class SumoUtils {
          String messageWithoutPlaceholders = MessageUtils.replacePlaceholderWith(message.value(), "*");
 
          for (String messagePart: messageParts) {
-            joiner.add("'" + messagePart.trim() + "'");
+            joiner.add("\"" + messagePart.trim() + "\"");
          }
 
          query.append(joiner.toString());
 
          query.append(" | parse ");
-         query.append("'" + messageWithoutPlaceholders + "'");
+         query.append("\"" + messageWithoutPlaceholders + " \"");
          query.append(" as ");
 
          StringJoiner parameters = new StringJoiner(", ");

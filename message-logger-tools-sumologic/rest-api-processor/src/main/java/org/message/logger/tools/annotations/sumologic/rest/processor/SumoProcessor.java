@@ -9,7 +9,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import feign.Feign;
@@ -21,12 +24,17 @@ import feign.okhttp.OkHttpClient;
 import org.message.logger.tools.annotations.Message;
 import org.message.logger.tools.annotations.sumologic.SumoFolder;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.SumoClient;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.CreateContent;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.CreateFolder;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.FolderResponse;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.PersonalFolder;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.SearchContent;
 import org.message.logger.tools.annotations.sumologic.utils.SumoUtils;
 
+import static java.lang.String.format;
+
 @SupportedOptions({"url", "accessID", "accessKey"})
-public class SumoProcessorContent extends AbstractProcessor {
+public class SumoProcessor extends AbstractProcessor {
 
    @Override
    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
@@ -56,7 +64,7 @@ public class SumoProcessorContent extends AbstractProcessor {
 
             for (String folder : folders) {
                try {
-                  sumoClient.createFolder(new CreateFolder(folder, String.format("Folder for %s", folder), personal.getId()));
+                  FolderResponse folderResponse = sumoClient.createFolder(new CreateFolder(folder, String.format("Folder for %s", folder), personal.getId()));
                } catch (FeignException.BadRequest e) {
                }
             }
@@ -65,9 +73,14 @@ public class SumoProcessorContent extends AbstractProcessor {
                SumoFolder folder = SumoUtils.resolveSumoFolder(annotatedElement);
 
                if (folder != null) {
-                  System.out.println("******************");
-                  System.out.println("Sumo Query: " + SumoUtils.resolveQuery((ExecutableElement) annotatedElement));
-                  System.out.println("******************");
+                  String sumoQuery = SumoUtils.resolveQuery((ExecutableElement) annotatedElement);
+
+                  String methodName = annotatedElement.getSimpleName().toString();
+
+                  SearchContent searchContent = new SearchContent(sumoQuery, "-15m", false, "", null, Collections.emptyList());
+                  CreateContent content = new CreateContent("SavedSearchWithScheduleSyncDefinition", methodName, format("Query for %s", methodName), searchContent);
+
+                  sumoClient.createContent(personal.getId(), content);
                }
             }
 
