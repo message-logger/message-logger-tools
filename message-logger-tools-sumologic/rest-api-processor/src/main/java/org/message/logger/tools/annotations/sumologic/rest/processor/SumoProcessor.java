@@ -24,6 +24,8 @@ import feign.okhttp.OkHttpClient;
 import org.message.logger.tools.annotations.Message;
 import org.message.logger.tools.annotations.sumologic.SumoFolder;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.SumoClient;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.ContentInformation;
+import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.ContentPath;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.CreateContent;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.CreateFolder;
 import org.message.logger.tools.annotations.sumologic.rest.processor.clients.model.FolderResponse;
@@ -51,6 +53,7 @@ public class SumoProcessor extends AbstractProcessor {
          for (TypeElement typeElement : annotations) {
 
             PersonalFolder personal = sumoClient.getPersonalFolder();
+            ContentPath personalPath = sumoClient.getContentPath(personal.getId());
 
             Set<String> folders = new HashSet<>();
 
@@ -69,6 +72,13 @@ public class SumoProcessor extends AbstractProcessor {
                }
             }
 
+            Map<String, String> folderIds = new HashMap<>();
+            for (String folder : folders) {
+               ContentInformation contentInformation = sumoClient.getContentByPath(personalPath.getPath() + "/" + folder);
+
+               folderIds.put(folder, contentInformation.getId());
+            }
+
             for (Element annotatedElement : env.getElementsAnnotatedWith(typeElement)) {
                SumoFolder folder = SumoUtils.resolveSumoFolder(annotatedElement);
 
@@ -80,7 +90,9 @@ public class SumoProcessor extends AbstractProcessor {
                   SearchContent searchContent = new SearchContent(sumoQuery, "-15m", false, "", null, Collections.emptyList());
                   CreateContent content = new CreateContent("SavedSearchWithScheduleSyncDefinition", methodName, format("Query for %s", methodName), searchContent);
 
-                  sumoClient.createContent(personal.getId(), content);
+                  String folderId = folderIds.get(folder.value());
+
+                  sumoClient.createContent(folderId, content);
                }
             }
 
