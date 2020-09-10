@@ -38,8 +38,9 @@
                <source>${java.version}</source>
                <target>${java.version}</target>
                <compilerArgs>
+                  <arg>-Aurl=https://api.us2.sumologic.com/api/v2</arg>
                   <arg>-AaccessID=${env.ACCESS_ID}</arg>
-                  <arg>-AaccessKey==${env.ACCESS_KEY}</arg>
+                  <arg>-AaccessKey=${env.ACCESS_KEY}</arg>
                </compilerArgs>
             </configuration>
          </plugin>

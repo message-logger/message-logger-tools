@@ -14,11 +14,25 @@
 
    <name>Message Logger Tools Sumo Logic REST API Processor</name>
 
+   <properties>
+      <feign.version>11.0</feign.version>
+   </properties>
    <dependencies>
       <dependency>
          <groupId>io.github.message-logger</groupId>
          <artifactId>message-logger-tools-sumologic-annotations</artifactId>
          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>io.github.openfeign</groupId>
+         <artifactId>feign-okhttp</artifactId>
+         <version>${feign.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>io.github.openfeign</groupId>
+         <artifactId>feign-gson</artifactId>
+         <version>${feign.version}</version>
       </dependency>
    </dependencies>
 
