@@ -1,8 +1,8 @@
 package org.message.logger.tools.annotations.sumologic.rest.processor.clients.model;
 
-public class CreateContent {
+public class SavedSearchWithScheduleSyncDefinition {
 
-   private String type;
+   private String type = "SavedSearchWithScheduleSyncDefinition";
 
    private String name;
 
@@ -10,8 +10,7 @@ public class CreateContent {
 
    private SearchContent search;
 
-   public CreateContent(String type, String name, String description, SearchContent search) {
-      this.type = type;
+   public SavedSearchWithScheduleSyncDefinition(String name, String description, SearchContent search) {
       this.name = name;
       this.description = description;
       this.search = search;
