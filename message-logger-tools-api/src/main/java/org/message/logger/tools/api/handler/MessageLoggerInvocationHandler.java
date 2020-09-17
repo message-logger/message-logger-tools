@@ -12,7 +12,7 @@ import org.message.logger.tools.annotations.Message;
 import org.message.logger.tools.annotations.Metadata;
 import org.message.logger.tools.annotations.containers.MetadataContainer;
 import org.message.logger.tools.api.BasicLogger;
-import org.message.logger.tools.api.ExtendedBasicLogger;
+import org.message.logger.tools.api.LibraryLogger;
 import org.message.logger.tools.api.exceptions.DelegationMethodNotFound;
 
 import static java.lang.String.format;
@@ -20,9 +20,9 @@ import static java.lang.String.format;
 public class MessageLoggerInvocationHandler implements InvocationHandler {
 
    private static final Metadata[] EMPTY_METADATA = new Metadata[0];
-   private ExtendedBasicLogger logger;
+   private LibraryLogger logger;
 
-   public MessageLoggerInvocationHandler(ExtendedBasicLogger logger) {
+   public MessageLoggerInvocationHandler(LibraryLogger logger) {
       this.logger = logger;
    }
 
@@ -57,7 +57,7 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
          }
 
          if (args == null || args.length == 0) {
-            ExtendedBasicLoggerWrapper.of(logger).logMessage(level, message.value(), metadata);
+            LibraryLoggerWrapper.of(logger).logMessage(level, message.value(), metadata);
 
             successfulInvocation = true;
          } else {
@@ -67,11 +67,11 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
             boolean isException = Throwable.class.isAssignableFrom(lastParameter.getClass());
 
             if (moreThanOne) {
-               ExtendedBasicLoggerWrapper.of(logger).logMessageAndParameters(level, message.value(), metadata, args);
+               LibraryLoggerWrapper.of(logger).logMessageAndParameters(level, message.value(), metadata, args);
 
                successfulInvocation = true;
             } else if (isException) {
-               ExtendedBasicLoggerWrapper.of(logger).logMessageAndException(level, message.value(), metadata, (Throwable) args[0]);
+               LibraryLoggerWrapper.of(logger).logMessageAndException(level, message.value(), metadata, (Throwable) args[0]);
 
                successfulInvocation = true;
             }

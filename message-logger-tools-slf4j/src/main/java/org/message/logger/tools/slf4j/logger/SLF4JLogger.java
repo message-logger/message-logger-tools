@@ -3,11 +3,11 @@ package org.message.logger.tools.slf4j.logger;
 import java.util.Collections;
 import java.util.Map;
 
-import org.message.logger.tools.api.ExtendedBasicLogger;
+import org.message.logger.tools.api.LibraryLogger;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 
-public class SLF4JLogger implements ExtendedBasicLogger {
+public class SLF4JLogger implements LibraryLogger {
 
    private final Logger logger;
 

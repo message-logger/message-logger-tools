@@ -1,8 +1,8 @@
 package org.message.logger.tools.api.provider;
 
-import org.message.logger.tools.api.ExtendedBasicLogger;
+import org.message.logger.tools.api.LibraryLogger;
 
 public interface LoggerProvider {
 
-   ExtendedBasicLogger getLogger(String name);
+   LibraryLogger getLogger(String name);
 }

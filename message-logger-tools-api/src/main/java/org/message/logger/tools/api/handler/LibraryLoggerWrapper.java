@@ -3,18 +3,18 @@ package org.message.logger.tools.api.handler;
 import java.util.Map;
 
 import org.message.logger.tools.annotations.Message;
-import org.message.logger.tools.api.ExtendedBasicLogger;
+import org.message.logger.tools.api.LibraryLogger;
 
-final class ExtendedBasicLoggerWrapper {
+final class LibraryLoggerWrapper {
 
-   private ExtendedBasicLogger logger;
+   private LibraryLogger logger;
 
-   private ExtendedBasicLoggerWrapper(ExtendedBasicLogger logger) {
+   private LibraryLoggerWrapper(LibraryLogger logger) {
       this.logger = logger;
    }
 
-   static ExtendedBasicLoggerWrapper of(ExtendedBasicLogger logger) {
-      return new ExtendedBasicLoggerWrapper(logger);
+   static LibraryLoggerWrapper of(LibraryLogger logger) {
+      return new LibraryLoggerWrapper(logger);
    }
 
    void logMessage(Message.Level level, String msg, Map<String, String> metadata) {

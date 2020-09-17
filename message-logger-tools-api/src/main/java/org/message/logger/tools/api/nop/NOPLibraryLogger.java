@@ -2,9 +2,9 @@ package org.message.logger.tools.api.nop;
 
 import java.util.Map;
 
-import org.message.logger.tools.api.ExtendedBasicLogger;
+import org.message.logger.tools.api.LibraryLogger;
 
-public class NOPExtendedBasicLogger implements ExtendedBasicLogger {
+public class NOPLibraryLogger implements LibraryLogger {
 
    @Override
    public void debug(String msg) {

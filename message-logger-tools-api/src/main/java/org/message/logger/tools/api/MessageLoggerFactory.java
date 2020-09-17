@@ -21,7 +21,7 @@ public final class MessageLoggerFactory {
       Objects.requireNonNull(clazz, "Message logger class cannot be null");
 
       Class<?> caller = CallerDetector.$.getCallingClass();
-      ExtendedBasicLogger logger = LOGGER_PROVIDER.getLogger(caller.getName());
+      LibraryLogger logger = LOGGER_PROVIDER.getLogger(caller.getName());
 
       return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new MessageLoggerInvocationHandler(logger));
    }

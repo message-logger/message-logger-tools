@@ -2,7 +2,7 @@ package org.message.logger.tools.api;
 
 import java.util.Map;
 
-public interface ExtendedBasicLogger extends BasicLogger {
+public interface LibraryLogger extends BasicLogger {
 
    void debug(String msg, Map<String, String> metadata);
 
