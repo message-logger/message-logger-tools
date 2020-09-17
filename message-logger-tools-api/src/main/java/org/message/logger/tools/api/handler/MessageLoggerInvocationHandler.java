@@ -19,6 +19,7 @@ import static java.lang.String.format;
 
 public class MessageLoggerInvocationHandler implements InvocationHandler {
 
+   private static final Metadata[] EMPTY_METADATA = new Metadata[0];
    private ExtendedBasicLogger logger;
 
    public MessageLoggerInvocationHandler(ExtendedBasicLogger logger) {
@@ -44,18 +45,17 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
          Message message = method.getAnnotation(Message.class);
          Message.Level level = message.level();
 
-         MetadataContainer metadataContainer = method.getAnnotation(MetadataContainer.class);
+         Metadata[] metadataAnnotations = resolveMetadata(method);
 
          Map<String, String> metadata = Collections.emptyMap();
 
-         if (metadataContainer != null) {
+         if (metadataAnnotations.length != 0) {
             metadata = new HashMap<>();
-            Metadata[] metadataAnnotations = metadataContainer.value();
-
             for (Metadata metadataAnnotation : metadataAnnotations) {
                metadata.put(metadataAnnotation.key(), metadataAnnotation.value());
             }
          }
+
          if (args == null || args.length == 0) {
             ExtendedBasicLoggerWrapper.of(logger).logMessage(level, message.value(), metadata);
 
@@ -90,5 +90,21 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
       Class[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
 
       return logger.getClass().getMethod(methodName, parameterTypes);
+   }
+
+   private Metadata[] resolveMetadata(Method method) {
+      Metadata[] metadataAnnotations = EMPTY_METADATA;
+
+      Metadata metadata = method.getAnnotation(Metadata.class);
+      MetadataContainer metadataContainer = method.getAnnotation(MetadataContainer.class);
+
+      if (metadata != null) {
+         metadataAnnotations = new Metadata[1];
+         metadataAnnotations[0] = metadata;
+      } else if (metadataContainer != null) {
+         metadataAnnotations = metadataContainer.value();
+      }
+
+      return metadataAnnotations;
    }
 }
