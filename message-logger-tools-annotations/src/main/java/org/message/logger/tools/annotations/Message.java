@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface Message {
 
-   String value();
+   String value() default "";
 
    Message.Level level() default Message.Level.INFO;
 

@@ -5,6 +5,7 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
@@ -28,12 +29,13 @@ public class MessageAnnotationProcessor extends AbstractProcessor {
 
       for (TypeElement typeElement : annotations) {
          for (Element annotatedElement : env.getElementsAnnotatedWith(typeElement)) {
-            Message annotation = annotatedElement.getAnnotation(Message.class);
 
             ExecutableType executableType = (ExecutableType) annotatedElement.asType();
             List<? extends TypeMirror> parameters = executableType.getParameterTypes();
 
-            int placeholderCount = MessageUtils.countPlaceholders(annotation);
+            String messageTemplate = MessageUtils.resolveMessage((ExecutableElement) annotatedElement);
+
+            int placeholderCount = MessageUtils.countPlaceholders(messageTemplate);
             int parameterCount = parameters.size();
 
             if (parameterCount > 0) {

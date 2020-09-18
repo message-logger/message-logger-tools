@@ -42,7 +42,7 @@ public class SumoLogicContent extends AbstractProcessor {
                if (folder != null) {
                   String folderName = Utils.folderName(folder.value());
 
-                  String methodName = annotatedElement.getSimpleName().toString();
+                  String methodName = annotatedElement.getSimpleName().toString().replaceAll("\\$", "_");
 
                   String sumoQuery = SumoUtils.resolveQuery((ExecutableElement) annotatedElement);
                   sumoQuery = sumoQuery.replaceAll("\"", "\\\\\"");

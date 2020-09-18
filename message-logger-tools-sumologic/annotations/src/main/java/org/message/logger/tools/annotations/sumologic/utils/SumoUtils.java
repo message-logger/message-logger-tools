@@ -3,8 +3,6 @@ package org.message.logger.tools.annotations.sumologic.utils;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ExecutableType;
-import javax.lang.model.util.Types;
 import java.util.Optional;
 import java.util.StringJoiner;
 
@@ -36,14 +34,16 @@ public class SumoUtils {
          }
       }
 
-      int placeholders = MessageUtils.countPlaceholders(message);
+      String messageTemplate = MessageUtils.resolveMessage(annotatedElement);
 
-      if (placeholders > 0) {
+      int placeholderCount = MessageUtils.countPlaceholders(messageTemplate);
+
+      if (placeholderCount > 0) {
          StringJoiner joiner = new StringJoiner(" AND ");
-         String[] messageParts = MessageUtils.splitByPlaceholder(message.value());
-         String messageWithoutPlaceholders = MessageUtils.replacePlaceholderWith(message.value(), "*");
+         String[] messageParts = MessageUtils.splitByPlaceholder(messageTemplate);
+         String messageWithoutPlaceholders = MessageUtils.replacePlaceholderWith(messageTemplate, "*");
 
-         for (String messagePart: messageParts) {
+         for (String messagePart : messageParts) {
             joiner.add("\"" + messagePart.trim() + "\"");
          }
 
@@ -55,13 +55,13 @@ public class SumoUtils {
 
          StringJoiner parameters = new StringJoiner(", ");
 
-         for (VariableElement parameter: annotatedElement.getParameters()) {
+         for (VariableElement parameter : annotatedElement.getParameters()) {
             parameters.add(parameter.getSimpleName());
          }
 
          query.append(parameters.toString());
       } else {
-         query.append(message.value());
+         query.append(messageTemplate);
       }
 
       return query.toString();

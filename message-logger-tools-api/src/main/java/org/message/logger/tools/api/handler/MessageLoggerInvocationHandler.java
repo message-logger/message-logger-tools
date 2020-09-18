@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.message.logger.tools.annotations.Message;
 import org.message.logger.tools.annotations.Metadata;
-import org.message.logger.tools.annotations.containers.MetadataContainer;
+import org.message.logger.tools.annotations.utils.MessageUtils;
 import org.message.logger.tools.api.BasicLogger;
 import org.message.logger.tools.api.LibraryLogger;
 import org.message.logger.tools.api.exceptions.DelegationMethodNotFound;
@@ -19,7 +19,6 @@ import static java.lang.String.format;
 
 public class MessageLoggerInvocationHandler implements InvocationHandler {
 
-   private static final Metadata[] EMPTY_METADATA = new Metadata[0];
    private LibraryLogger logger;
 
    public MessageLoggerInvocationHandler(LibraryLogger logger) {
@@ -42,10 +41,8 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
 
          successfulInvocation = true;
       } else {
-         Message message = method.getAnnotation(Message.class);
-         Message.Level level = message.level();
-
-         Metadata[] metadataAnnotations = resolveMetadata(method);
+         Message.Level level = MessageUtils.resolveLevel(method);
+         Metadata[] metadataAnnotations = MessageUtils.resolveMetadata(method);
 
          Map<String, String> metadata = Collections.emptyMap();
 
@@ -56,8 +53,9 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
             }
          }
 
+         String message = MessageUtils.resolveMessage(method);
          if (args == null || args.length == 0) {
-            LibraryLoggerWrapper.of(logger).logMessage(level, message.value(), metadata);
+            LibraryLoggerWrapper.of(logger).logMessage(level, message, metadata);
 
             successfulInvocation = true;
          } else {
@@ -67,11 +65,11 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
             boolean isException = Throwable.class.isAssignableFrom(lastParameter.getClass());
 
             if (moreThanOne) {
-               LibraryLoggerWrapper.of(logger).logMessageAndParameters(level, message.value(), metadata, args);
+               LibraryLoggerWrapper.of(logger).logMessageAndParameters(level, message, metadata, args);
 
                successfulInvocation = true;
             } else if (isException) {
-               LibraryLoggerWrapper.of(logger).logMessageAndException(level, message.value(), metadata, (Throwable) args[0]);
+               LibraryLoggerWrapper.of(logger).logMessageAndException(level, message, metadata, (Throwable) args[0]);
 
                successfulInvocation = true;
             }
@@ -90,21 +88,5 @@ public class MessageLoggerInvocationHandler implements InvocationHandler {
       Class[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
 
       return logger.getClass().getMethod(methodName, parameterTypes);
-   }
-
-   private Metadata[] resolveMetadata(Method method) {
-      Metadata[] metadataAnnotations = EMPTY_METADATA;
-
-      Metadata metadata = method.getAnnotation(Metadata.class);
-      MetadataContainer metadataContainer = method.getAnnotation(MetadataContainer.class);
-
-      if (metadata != null) {
-         metadataAnnotations = new Metadata[1];
-         metadataAnnotations[0] = metadata;
-      } else if (metadataContainer != null) {
-         metadataAnnotations = metadataContainer.value();
-      }
-
-      return metadataAnnotations;
    }
 }

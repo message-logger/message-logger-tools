@@ -14,4 +14,7 @@ public interface TerraformLogger extends MessageLogger {
 
    @Message("Simple message {}")
    void simpleMessageWithOneParameter(String parameter1);
+
+   @Message
+   void requestTo$WithMethod$Took$ms(String url, String method, long ms);
 }
