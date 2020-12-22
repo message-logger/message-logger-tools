@@ -1,0 +1,9 @@
+= Message Logger Tools
+
+This project is a initial POC to check if it was possible to add additional functionality to our logs lines.
+
+== Features
+
+* Validate log line
+* Generate Terraform Script
+* Make log libraries pluggable
